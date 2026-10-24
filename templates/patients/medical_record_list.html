@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Rekam Medis Pasien - Rumah Sakit</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Data Rekam Medis & Diagnosa Pasien</h4>
+                <div>
+                    <a href="{% url 'appointment_list' %}" class="btn btn-outline-light btn-sm">Kembali ke Antrean</a>
+                    <a href="{% url 'medical_record_create' %}" class="btn btn-success btn-sm">Input Rekam Medis Baru</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>No. RM & Pasien</th>
+                            <th>Dokter Pemeriksa</th>
+                            <th>Diagnosa</th>
+                            <th>Tindakan Medis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rec in records %}
+                        <tr>
+                            <td>{{ rec.created_at|date:"d M Y H:i" }}</td>
+                            <td>
+                                <strong>{{ rec.appointment.patient.nomor_rm }}</strong><br>
+                                {{ rec.appointment.patient.nama_lengkap }}
+                            </td>
+                            <td>{{ rec.appointment.doctor.nama_dokter }}</td>
+                            <td>{{ rec.diagnosa }}</td>
+                            <td>{{ rec.tindakan_medis }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">Belum ada data rekam medis tercatat.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

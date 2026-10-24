@@ -25,6 +25,11 @@ class PoliklinikViewsTests(TestCase):
 
 
 class PatientViewsTests(TestCase):
+    def test_site_root_redirects_to_patient_list(self):
+        response = self.client.get('/')
+
+        self.assertRedirects(response, reverse('patient_list'))
+
     def test_patient_create_saves_valid_form(self):
         response = self.client.post(
             reverse('patient_create'),

@@ -1,13 +1,15 @@
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect, render
 
+from .models import Appointment, Patient, Poliklinik, MedicalRecord
+
 from .forms import (
     AppointmentForm,
     AppointmentStatusForm,
     PatientForm,
     PoliklinikForm,
+    MedicalRecordForm,
 )
-from .models import Appointment, Patient, Poliklinik
 
 def patient_list(request):
     patients = Patient.objects.all().order_by('nama_lengkap', 'id')
@@ -81,3 +83,24 @@ def appointment_update_status(request, pk):
 
     context = {'appointment': appointment, 'form': form}
     return render(request, 'patients/appointment_update.html', context)
+
+
+def medical_record_list(request):
+    records = MedicalRecord.objects.all().order_by('-created_at')
+    context = {'records': records}
+    return render(request, 'patients/medical_record_list.html', context)
+
+def medical_record_create(request):
+    if request.method == 'POST':
+        form = MedicalRecordForm(request.POST)
+        if form.is_valid():
+            record = form.save()
+            # Otomatis ubah status appointment menjadi 'Selesai' jika rekam medis sudah diisi
+            record.appointment.status = 'Selesai'
+            record.appointment.save()
+            return redirect('medical_record_list')
+    else:
+        form = MedicalRecordForm()
+    
+    context = {'form': form}
+    return render(request, 'patients/medical_record_form.html', context)
