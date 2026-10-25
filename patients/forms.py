@@ -57,3 +57,17 @@ class MedicalRecordForm(forms.ModelForm):
             'tindakan_medis': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Tindakan atau resep terapi...'}),
             'catatan_dokter': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Catatan khusus (opsional)...'}),
         }
+
+
+
+class PrescriptionForm(forms.ModelForm):
+    class Meta:
+        model = Prescription
+        fields = ['medical_record', 'nama_obat', 'jumlah', 'aturan_pakai', 'status_obat']
+        widgets = {
+            'medical_record': forms.Select(attrs={'class': 'form-select'}),
+            'nama_obat': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nama obat / sediaan'}),
+            'jumlah': forms.NumberInput(attrs={'class': 'form-control'}),
+            'aturan_pakai': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Misal: 3 x 1 tablet'}),
+            'status_obat': forms.Select(attrs={'class': 'form-select'}),
+        }

@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect, render
 
-from .models import Appointment, Patient, Poliklinik, MedicalRecord
+from .models import Appointment, Patient, Poliklinik, MedicalRecord, Prescription
 
 from .forms import (
     AppointmentForm,
@@ -9,6 +9,7 @@ from .forms import (
     PatientForm,
     PoliklinikForm,
     MedicalRecordForm,
+    PrescriptionForm,
 )
 
 def patient_list(request):
@@ -104,3 +105,23 @@ def medical_record_create(request):
     
     context = {'form': form}
     return render(request, 'patients/medical_record_form.html', context)
+
+
+
+
+def prescription_list(request):
+    prescriptions = Prescription.objects.all().order_by('-id')
+    context = {'prescriptions': prescriptions}
+    return render(request, 'patients/prescription_list.html', context)
+
+def prescription_create(request):
+    if request.method == 'POST':
+        form = PrescriptionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('prescription_list')
+    else:
+        form = PrescriptionForm()
+    
+    context = {'form': form}
+    return render(request, 'patients/prescription_form.html', context)

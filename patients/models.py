@@ -69,10 +69,16 @@ class MedicalRecord(models.Model):
         return f"Rekam Medis - {self.appointment.patient.nama_lengkap} ({self.created_at.strftime('%d-%m-%Y')})"
 
 class Prescription(models.Model):
+    STATUS_RESEP = [
+        ('Menunggu', 'Menunggu Pengambilan'),
+        ('Selesai', 'Sudah Diserahkan'),
+    ]
+
     medical_record = models.ForeignKey(MedicalRecord, on_delete=models.CASCADE, related_name="prescriptions", verbose_name="Rekam Medis")
-    nama_obat = models.CharField(max_length=150, verbose_name="Nama Obat")
-    dosis = models.CharField(max_length=100, verbose_name="Aturan Pakai / Dosis")
+    nama_obat = models.CharField(max_length=150, verbose_name="Nama Obat & Dosis")
     jumlah = models.PositiveIntegerField(verbose_name="Jumlah")
+    aturan_pakai = models.CharField(max_length=150, verbose_name="Aturan Pakai (Contoh: 3x1 Sesudah Makan)")
+    status_obat = models.CharField(max_length=20, choices=STATUS_RESEP, default='Menunggu')
 
     def __str__(self):
-        return f"{self.nama_obat} ({self.jumlah})"
+        return f"Resep: {self.nama_obat} ({self.jumlah}) - {self.medical_record.appointment.patient.nama_lengkap}"
