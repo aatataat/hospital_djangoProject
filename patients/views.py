@@ -1,3 +1,6 @@
+from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect, render
 
@@ -125,3 +128,21 @@ def prescription_create(request):
     
     context = {'form': form}
     return render(request, 'patients/prescription_form.html', context)
+
+
+
+#---------------------------- Form Login --------------------------------------------------------
+
+# Custom Login View menggunakan Bootstrap
+class CustomLoginView(LoginView):
+    template_name = 'patients/login.html'
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        return reverse_lazy('patient_list') # Setelah login sukses, diarahkan ke halaman data pasien
+
+@login_required(login_url='login')
+def patient_list(request):
+    patients = Patient.objects.all()
+    context = {'patients': patients}
+    return render(request, 'patients/patient_list.html', context)

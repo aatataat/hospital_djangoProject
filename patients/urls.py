@@ -6,6 +6,7 @@ from .views import (
     poliklinik_list, poliklinik_create,
     medical_record_list, medical_record_create,
     prescription_list, prescription_create,
+    CustomLoginView, LogoutView
 )
 
 urlpatterns = [
@@ -20,4 +21,6 @@ urlpatterns = [
     path('medical-records/add/', medical_record_create, name='medical_record_create'),
     path('prescriptions/', prescription_list, name='prescription_list'),
     path('prescriptions/add/', prescription_create, name='prescription_create'),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
 ]
